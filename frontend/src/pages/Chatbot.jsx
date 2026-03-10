@@ -13,6 +13,8 @@ function Chatbot() {
   const [chats, setChats] = useState([]);
   const [chatId, setChatId] = useState(null);
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const token = localStorage.getItem("token");
 
   const chatEndRef = useRef(null);
@@ -22,7 +24,7 @@ function Chatbot() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fetch chat history
+  // Load chat history
   useEffect(() => {
 
     const fetchChats = async () => {
@@ -83,6 +85,7 @@ function Chatbot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+
     setInput("");
     setLoading(true);
     setError("");
@@ -109,7 +112,7 @@ function Chatbot() {
 
       setMessages(prev => [...prev, aiMessage]);
 
-      // if first message create new chat
+      // First message creates chat
       if (!chatId) {
 
         setChatId(res.data.chatId);
@@ -117,7 +120,9 @@ function Chatbot() {
         const history = await axios.get(
           "http://localhost:5000/api/ai/history",
           {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
         );
 
@@ -155,7 +160,11 @@ function Chatbot() {
 
         {/* Sidebar */}
 
-        <div className="md:w-64 w-full bg-slate-900 border-r border-slate-800 p-4 overflow-y-auto">
+        <div
+          className={`${
+            sidebarOpen ? "block" : "hidden"
+          } md:block md:w-64 w-full bg-slate-900 border-r border-slate-800 p-4 overflow-y-auto`}
+        >
 
           <button
             onClick={newChat}
@@ -182,8 +191,8 @@ function Chatbot() {
               className="p-3 mb-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700"
             >
 
-              <p className="text-sm">
-                {new Date(chat.createdAt).toLocaleDateString()}
+              <p className="text-sm font-semibold truncate">
+                {chat.messages[0]?.text}
               </p>
 
               <p className="text-xs text-gray-400">
@@ -200,13 +209,22 @@ function Chatbot() {
 
         <div className="flex-1 flex flex-col">
 
+          {/* Mobile Sidebar Toggle */}
+
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="md:hidden bg-slate-800 px-3 py-2 rounded-lg m-2"
+          >
+            ☰ Chats
+          </button>
+
           {/* Messages */}
 
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
 
             {messages.length === 0 && (
               <p className="text-gray-400">
-                Ask any DSA question.
+                Ask any Data Structures or Algorithms question.
               </p>
             )}
 
@@ -239,9 +257,13 @@ function Chatbot() {
 
             ))}
 
+            {/* Typing animation */}
+
             {loading && (
-              <div className="text-gray-400 animate-pulse">
-                AI is thinking...
+              <div className="text-gray-400 flex gap-1">
+                <span className="animate-bounce">.</span>
+                <span className="animate-bounce delay-100">.</span>
+                <span className="animate-bounce delay-200">.</span>
               </div>
             )}
 
