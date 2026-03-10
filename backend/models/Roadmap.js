@@ -4,13 +4,33 @@ const roadmapSchema = new mongoose.Schema({
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+    ref: "User"
   },
 
   roadmap: {
-    type: Object,
-    required: true
+
+    phases: [
+      {
+        title: String,
+
+        cards: [
+          {
+            topic: String,
+
+            items: [String],
+
+            problems: [
+              {
+                title: String,
+                slug: String,
+                difficulty: String
+              }
+            ]
+          }
+        ]
+      }
+    ]
+
   }
 
 }, { timestamps: true });

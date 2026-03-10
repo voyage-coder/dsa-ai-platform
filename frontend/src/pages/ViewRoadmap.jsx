@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function ViewRoadmap() {
 
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [roadmap, setRoadmap] = useState(null);
@@ -15,9 +14,7 @@ function ViewRoadmap() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-
     fetchRoadmap();
-
   }, []);
 
   const fetchRoadmap = async () => {
@@ -41,31 +38,30 @@ function ViewRoadmap() {
 
   };
 
-
   const deleteRoadmap = async () => {
 
-  if (!window.confirm("Delete this roadmap?")) return;
+    if (!window.confirm("Delete this roadmap?")) return;
 
-  try {
+    try {
 
-    await API.delete(
-      `/roadmap/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+      await API.delete(
+        `/roadmap/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      }
-    );
+      );
 
-    navigate("/saved-roadmaps");
+      navigate("/saved-roadmaps");
 
-  } catch (error) {
+    } catch (error) {
 
-    console.log(error);
+      console.log(error);
 
-  }
+    }
 
-};
+  };
 
   return (
 
@@ -77,18 +73,18 @@ function ViewRoadmap() {
 
         <div className="flex justify-between items-center mb-8">
 
-            <h1 className="text-3xl font-bold">
-                Saved Roadmap
-            </h1>
+          <h1 className="text-3xl font-bold">
+            Saved Roadmap
+          </h1>
 
-            <button
-                onClick={deleteRoadmap}
-                className="bg-red-500 px-5 py-2 rounded-lg hover:bg-red-600 transition"
-            >
-                Delete Roadmap
-            </button>
+          <button
+            onClick={deleteRoadmap}
+            className="bg-red-500 px-5 py-2 rounded-lg hover:bg-red-600 transition"
+          >
+            Delete Roadmap
+          </button>
 
-            </div>
+        </div>
 
         {roadmap?.phases?.map((phase, i) => (
 
@@ -119,6 +115,52 @@ function ViewRoadmap() {
 
                   </ul>
 
+                  {/* Recommended Problems */}
+
+                  {card.problems && card.problems.length > 0 && (
+
+                    <div className="mt-4">
+
+                      <p className="text-sm text-gray-400 mb-2">
+                        Recommended Problems
+                      </p>
+
+                      <div className="space-y-2">
+
+                        {card.problems.map((p, index) => (
+
+                          <a
+                            key={index}
+                            href={`https://leetcode.com/problems/${p.slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block bg-slate-800 px-3 py-2 rounded hover:bg-slate-700 transition text-sm"
+                          >
+
+                            {p.title}
+
+                            <span
+                              className={`ml-2 text-xs ${
+                                p.difficulty === "Easy"
+                                  ? "text-green-400"
+                                  : p.difficulty === "Medium"
+                                  ? "text-yellow-400"
+                                  : "text-red-400"
+                              }`}
+                            >
+                              {p.difficulty}
+                            </span>
+
+                          </a>
+
+                        ))}
+
+                      </div>
+
+                    </div>
+
+                  )}
+
                 </div>
 
               ))}
@@ -134,6 +176,7 @@ function ViewRoadmap() {
     </div>
 
   );
+
 }
 
 export default ViewRoadmap;
