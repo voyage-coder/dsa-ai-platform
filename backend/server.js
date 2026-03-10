@@ -8,7 +8,7 @@ import protectedRoutes from "./routes/protectedRoutes.js";
 import roadmapRoutes from "./routes/roadmapRoutes.js";
 import topicRoutes from "./routes/topicRoutes.js"
 import aiRoutes from "./routes/aiRoutes.js";
-
+import cors from "cors";
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -16,12 +16,14 @@ connectDB();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api", protectedRoutes);
-app.use("/api", roadmapRoutes);
-app.use("/api", topicRoutes);
-app.use("/api", aiRoutes);
+app.use("/api/roadmap", roadmapRoutes);
+app.use("/api/topics", topicRoutes);
+app.use("/api/ai", aiRoutes);
+
 
 
 app.get("/", (req, res) => {
