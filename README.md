@@ -6,18 +6,18 @@
 ![AI](https://img.shields.io/badge/AI-Gemini-orange)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-An **AI-powered learning platform** that helps users master **Data Structures and Algorithms** using personalized roadmaps, topic tracking, and an AI-powered doubt-solving chatbot.
+An **AI-powered learning platform** designed to help users master **Data Structures and Algorithms (DSA)** through personalized roadmaps, topic tracking, LeetCode practice integration, and an AI-based doubt-solving chatbot.
 
-Built with the **MERN Stack + Gemini AI**.
+Built using the **MERN Stack + Google Gemini AI**.
 
 ---
 
 # 🌐 Live Demo
 
-Frontend:
+Frontend
 https://dsa-ai-platform.vercel.app/
 
-Backend API:
+Backend API
 https://dsa-ai-platform.onrender.com
 
 ---
@@ -29,20 +29,42 @@ https://dsa-ai-platform.onrender.com
 * User signup and login
 * JWT based authentication
 * Protected dashboard routes
+* Secure API access using authentication middleware
 
 ---
 
 ## 🧠 AI Roadmap Generator
 
-Generate personalized DSA learning roadmaps using **Gemini AI**.
+Generate **personalized DSA learning roadmaps** using **Gemini AI**.
 
-Users can select their learning level:
+Users can choose learning level:
 
 * Beginner
 * Intermediate
 * Advanced
 
-Each roadmap contains structured phases and topic cards.
+Each roadmap contains:
+
+* Structured learning phases
+* Topic cards
+* Concepts to learn
+* AI-recommended practice problems
+
+---
+
+## 🧩 AI Recommended LeetCode Problems
+
+Each roadmap topic includes **AI-selected LeetCode problems** to practice.
+
+Example:
+
+Arrays
+
+* Two Sum (Easy)
+* Maximum Subarray (Medium)
+* Container With Most Water (Medium)
+
+Users can click the problem to open it directly on **LeetCode**.
 
 ---
 
@@ -52,16 +74,16 @@ Users can:
 
 * Save generated roadmaps
 * View saved roadmaps
-* Delete roadmaps
-* Access them anytime
+* Delete saved roadmaps
+* Access roadmaps anytime
 
-All data is stored in **MongoDB Atlas**.
+All roadmaps are stored in **MongoDB Atlas**.
 
 ---
 
 ## 📚 DSA Topic Tracker
 
-Track learning progress across DSA topics.
+Track progress across key DSA topics.
 
 ### Beginner
 
@@ -90,27 +112,37 @@ Track learning progress across DSA topics.
 * Disjoint Set
 * Backtracking
 
-Progress is stored automatically in the database.
+User progress is saved in the database.
 
 ---
 
 ## 🤖 AI Doubt Solver Chatbot
 
-Ask any **DSA-related question**.
+Ask any **DSA-related question** and get explanations instantly.
 
 Features:
 
-* Gemini AI powered answers
-* Chat history storage
-* Sidebar with previous conversations
+* Powered by **Google Gemini AI**
+* DSA-specific responses only
+* Chat history saved in database
+* Previous conversations visible in sidebar
 * Markdown formatted responses
-* Typing animation
+* Real-time chat interface
+
+The chatbot only answers questions related to:
+
+* Data Structures
+* Algorithms
+* Coding interview preparation
+* Competitive programming
 
 ---
 
 ## 📱 Responsive UI
 
-Fully responsive interface designed for:
+Fully responsive design built with **Tailwind CSS**.
+
+Works smoothly on:
 
 * Mobile
 * Tablet
@@ -126,6 +158,7 @@ Fully responsive interface designed for:
 * Tailwind CSS
 * Axios
 * React Markdown
+* React Router
 
 ---
 
@@ -143,9 +176,15 @@ Fully responsive interface designed for:
 
 * Google Gemini API
 
+Used for:
+
+* Roadmap generation
+* Chatbot responses
+* AI-recommended problem suggestions
+
 ---
 
-## Deployment
+# 🚀 Deployment
 
 | Service  | Platform      |
 | -------- | ------------- |
@@ -160,7 +199,7 @@ Fully responsive interface designed for:
 
 ## Backend `.env`
 
-```id="ue47bb"
+```
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
@@ -171,14 +210,14 @@ GEMINI_API_KEY=your_gemini_api_key
 
 ## Frontend `.env`
 
-```id="vdxgyn"
+```
 VITE_API_URL=http://localhost:5000
 ```
 
 Production:
 
-```id="tuhp5n"
-VITE_API_URL=https://your-backend-url.onrender.com
+```
+VITE_API_URL=https://dsa-ai-platform.onrender.com
 ```
 
 ---
@@ -187,7 +226,7 @@ VITE_API_URL=https://your-backend-url.onrender.com
 
 ## Clone Repository
 
-```id="ncy2pq"
+```
 git clone https://github.com/voyage-coder/dsa-ai-platform.git
 cd dsa-ai-platform
 ```
@@ -196,7 +235,7 @@ cd dsa-ai-platform
 
 ## Start Backend
 
-```id="ccsz02"
+```
 cd backend
 npm install
 node server.js
@@ -206,7 +245,7 @@ node server.js
 
 ## Start Frontend
 
-```id="77t20r"
+```
 cd frontend
 npm install
 npm run dev
@@ -214,7 +253,7 @@ npm run dev
 
 Open in browser:
 
-```id="9glrx0"
+```
 http://localhost:5173
 ```
 
@@ -224,7 +263,7 @@ http://localhost:5173
 
 ## Authentication
 
-```id="z0pdpc"
+```
 POST /api/auth/signup
 POST /api/auth/login
 ```
@@ -233,7 +272,7 @@ POST /api/auth/login
 
 ## Roadmaps
 
-```id="qzhmje"
+```
 POST /api/roadmap/generate
 POST /api/roadmap/store
 GET /api/roadmap/my
@@ -245,7 +284,7 @@ DELETE /api/roadmap/:id
 
 ## Topics Progress
 
-```id="jyfb49"
+```
 GET /api/topics
 POST /api/topics
 ```
@@ -254,7 +293,7 @@ POST /api/topics
 
 ## AI Chat
 
-```id="0njqbv"
+```
 POST /api/ai/chat
 GET /api/ai/history
 ```
@@ -264,10 +303,11 @@ GET /api/ai/history
 # 📈 Future Improvements
 
 * AI generated **DSA coding problems**
-* Community discussion forum
-* Daily coding challenges
+* Daily coding practice generator
 * Learning analytics dashboard
-* Dark/light theme toggle
+* Community discussion forum
+* Dark / Light theme
+* Interactive roadmap visualization
 
 ---
 
@@ -275,5 +315,5 @@ GET /api/ai/history
 
 **Navya Sree**
 
-GitHub:
+GitHub
 https://github.com/voyage-coder
