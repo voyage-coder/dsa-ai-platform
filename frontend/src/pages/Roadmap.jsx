@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 import { useNavigate } from "react-router-dom";
 
@@ -21,8 +21,8 @@ function Roadmap() {
 
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:5000/api/roadmap/generate",
+      const res = await API.post(
+        "/roadmap/generate",
         { level },
         {
           headers: {
@@ -53,8 +53,8 @@ function Roadmap() {
 
   try {
 
-    await axios.post(
-      "http://localhost:5000/api/roadmap/store",
+    await API.post(
+      "/roadmap/store",
       { roadmap },
       {
         headers: {
@@ -77,8 +77,8 @@ const viewRoadmaps = async () => {
 
   try {
 
-    const res = await axios.get(
-      "http://localhost:5000/api/roadmap/my",
+    const res = await API.get(
+      "/roadmap/my",
       {
         headers: {
           Authorization: `Bearer ${token}`

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import ReactMarkdown from "react-markdown";
 import DashboardNavbar from "../components/DashboardNavbar";
 
@@ -31,8 +31,8 @@ function Chatbot() {
 
       try {
 
-        const res = await axios.get(
-          "http://localhost:5000/api/ai/history",
+        const res = await API.get(
+          "/ai/history",
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -92,8 +92,8 @@ function Chatbot() {
 
     try {
 
-      const res = await axios.post(
-        "http://localhost:5000/api/ai/chat",
+      const res = await API.post(
+        "/ai/chat",
         {
           message: userMessage.text,
           chatId
@@ -117,8 +117,8 @@ function Chatbot() {
 
         setChatId(res.data.chatId);
 
-        const history = await axios.get(
-          "http://localhost:5000/api/ai/history",
+        const history = await API.get(
+          "/ai/history",
           {
             headers: {
               Authorization: `Bearer ${token}`

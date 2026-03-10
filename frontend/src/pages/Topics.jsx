@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import DashboardNavbar from "../components/DashboardNavbar";
-import axios from "axios";
+import API from "../api/axios";
 
 const topics = {
   beginner: [
@@ -38,8 +38,8 @@ function Topics() {
 
   const fetchProgress = async () => {
 
-    const res = await axios.get(
-      "http://localhost:5000/api/topics",
+    const res = await API.get(
+      "/topics",
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -74,8 +74,8 @@ function Topics() {
 
   try {
 
-    await axios.post(
-      "http://localhost:5000/api/topics",
+    await API.post(
+      "/topics",
       { completedTopics },
       {
         headers: {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 
 function Signup() {
@@ -24,8 +24,8 @@ function Signup() {
 
     try {
 
-      await axios.post(
-        "http://localhost:5000/api/auth/signup",
+      await API.post(
+        "/auth/signup",
         form
       );
 

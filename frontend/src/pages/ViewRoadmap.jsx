@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import { useParams } from "react-router-dom";
 import DashboardNavbar from "../components/DashboardNavbar";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +24,8 @@ function ViewRoadmap() {
 
     try {
 
-      const res = await axios.get(
-        `http://localhost:5000/api/roadmap/${id}`,
+      const res = await API.get(
+        `/roadmap/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -48,8 +48,8 @@ function ViewRoadmap() {
 
   try {
 
-    await axios.delete(
-      `http://localhost:5000/api/roadmap/${id}`,
+    await API.delete(
+      `/roadmap/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
