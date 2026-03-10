@@ -5,11 +5,57 @@ import Chat from "../models/Chat.js";
 
 const router = express.Router();
 
+const dsaKeywords = [
+  "array",
+  "string",
+  "linked list",
+  "stack",
+  "queue",
+  "tree",
+  "binary tree",
+  "graph",
+  "dynamic programming",
+  "dp",
+  "recursion",
+  "sorting",
+  "binary search",
+  "algorithm",
+  "data structure",
+  "time complexity",
+  "space complexity",
+  "hashing",
+  "heap",
+  "trie",
+  "segment tree",
+  "backtracking",
+  "dfs",
+  "bfs",
+  "leetcode",
+  "coding",
+  "programming"
+];
+
 router.post("/chat", authMiddleware, async (req, res) => {
 
   try {
 
     const { message, chatId } = req.body;
+
+    const lowerMessage = message.toLowerCase();
+
+    const isDSAQuestion = dsaKeywords.some(keyword =>
+      lowerMessage.includes(keyword)
+    );
+
+    if (!isDSAQuestion) {
+
+      return res.json({
+        reply:
+          "⚠️ This chatbot only answers questions related to Data Structures and Algorithms.",
+        chatId
+      });
+
+    }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -17,7 +63,37 @@ router.post("/chat", authMiddleware, async (req, res) => {
       model: "gemini-2.5-flash"
     });
 
-    const result = await model.generateContent(message);
+    const result = await model.generateContent({
+  contents: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: `
+You are an expert Data Structures and Algorithms tutor.
+
+You ONLY answer questions related to:
+- Data Structures
+- Algorithms
+- Competitive programming
+- Coding interview preparation
+- LeetCode problems
+- Time complexity
+- Space complexity
+
+If the user asks something unrelated to DSA, programming, or algorithms,
+reply ONLY with this message:
+
+"⚠️ This chatbot is designed only for Data Structures and Algorithms questions. Please ask something related to coding, algorithms, or DSA topics."
+
+User Question:
+${message}
+`
+        }
+      ]
+    }
+  ]
+});
 
     const reply = result.response.text();
 

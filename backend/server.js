@@ -8,6 +8,7 @@ import protectedRoutes from "./routes/protectedRoutes.js";
 import roadmapRoutes from "./routes/roadmapRoutes.js";
 import topicRoutes from "./routes/topicRoutes.js"
 import aiRoutes from "./routes/aiRoutes.js";
+import leetcodeRoutes from "./routes/leetcodeRoutes.js";
 import cors from "cors";
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
@@ -23,6 +24,7 @@ app.use("/api", protectedRoutes);
 app.use("/api/roadmap", roadmapRoutes);
 app.use("/api/topics", topicRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api", leetcodeRoutes);
 
 
 

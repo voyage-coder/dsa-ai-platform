@@ -18,7 +18,7 @@ router.post("/generate", authMiddleware, async (req, res) => {
     });
 
     const prompt = `
-Create a Data Structures and Algorithms learning roadmap for a ${level} learner.
+Create a Data Structures and Algorithms roadmap for a ${level} learner.
 
 Return ONLY JSON in this format:
 
@@ -27,20 +27,30 @@ Return ONLY JSON in this format:
   {
    "title":"Phase name",
    "cards":[
-     {
-       "topic":"Topic name",
-       "items":["subtopic1","subtopic2","subtopic3"]
-     }
+    {
+     "topic":"Topic name",
+     "items":["concept1","concept2","concept3"],
+     "problems":[
+       {
+         "title":"LeetCode Problem Name",
+         "slug":"leetcode-problem-slug",
+         "difficulty":"Easy"
+       }
+     ]
+    }
    ]
   }
  ]
 }
 
 Rules:
+
 - Generate 3 to 5 phases
-- Each phase should contain 3 to 6 topic cards
-- Each topic card should contain 3 to 5 learning items
-- Do NOT include explanations
+- Each phase should contain 3 to 5 topic cards
+- Each card should contain 3 learning items
+- Each card should contain 3 recommended LeetCode problems
+- Problems must be REAL LeetCode problems
+- Include correct slug used in LeetCode URLs
 - Return ONLY JSON
 `;
 

@@ -292,7 +292,7 @@ function Chatbot() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") sendMessage();
               }}
-              placeholder="Ask your DSA question..."
+              placeholder="Ask a DSA question (e.g. explain recursion)"
               className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-4 py-2"
             />
 

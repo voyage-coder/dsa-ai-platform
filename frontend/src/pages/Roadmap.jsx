@@ -1,19 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/axios";
 import DashboardNavbar from "../components/DashboardNavbar";
 import { useNavigate } from "react-router-dom";
 
-
-
 function Roadmap() {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const [problems, setProblems] = useState([]);
 
   const [level, setLevel] = useState("");
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
+
+  /* ---------------- Fetch Problems (fallback list) ---------------- */
+
+  useEffect(() => {
+
+    const fetchProblems = async () => {
+
+      try {
+
+        const res = await API.get("/leetcode");
+
+        setProblems(res.data);
+
+      } catch (error) {
+
+        console.log("Failed to fetch problems");
+
+      }
+
+    };
+
+    fetchProblems();
+
+  }, []);
+
+  /* ---------------- Generate Roadmap ---------------- */
 
   const generateRoadmap = async () => {
 
@@ -37,64 +63,74 @@ function Roadmap() {
 
       setLoading(false);
 
-    }catch (error) {
+    } catch (error) {
 
-  if (error.response?.status === 429) {
-    alert("AI request limit reached. Please wait a few seconds and try again.");
-  } else {
-    alert("Failed to generate roadmap.");
-  }
+      if (error.response?.status === 429) {
 
-}
+        alert("AI request limit reached. Please wait a few seconds and try again.");
+
+      } else {
+
+        alert("Failed to generate roadmap.");
+
+      }
+
+      setLoading(false);
+
+    }
 
   };
 
+  /* ---------------- Store Roadmap ---------------- */
+
   const storeRoadmap = async () => {
 
-  try {
+    try {
 
-    await API.post(
-      "/roadmap/store",
-      { roadmap },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+      await API.post(
+        "/roadmap/store",
+        { roadmap },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      }
-    );
+      );
 
-    alert("Roadmap stored successfully");
+      alert("Roadmap stored successfully");
 
-  } catch (error) {
+    } catch (error) {
 
-    console.log(error);
+      console.log(error);
 
-  }
+    }
 
-};
+  };
 
-const viewRoadmaps = async () => {
+  /* ---------------- View Roadmaps ---------------- */
 
-  try {
+  const viewRoadmaps = async () => {
 
-    const res = await API.get(
-      "/roadmap/my",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+    try {
+
+      const res = await API.get(
+        "/roadmap/my",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      }
-    );
+      );
 
-    console.log("Saved Roadmaps:", res.data);
+      console.log("Saved Roadmaps:", res.data);
 
-  } catch (error) {
+    } catch (error) {
 
-    console.log(error);
+      console.log(error);
 
-  }
+    }
 
-};
+  };
 
   return (
 
@@ -203,6 +239,52 @@ const viewRoadmaps = async () => {
 
                   </ul>
 
+                  {/* AI Recommended Problems */}
+
+                  {card.problems && card.problems.length > 0 && (
+
+                    <div className="mt-4">
+
+                      <p className="text-sm text-gray-400 mb-2">
+                        Recommended Problems
+                      </p>
+
+                      <div className="space-y-2">
+
+                        {card.problems.map((p, index) => (
+
+                          <a
+                            key={index}
+                            href={`https://leetcode.com/problems/${p.slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block bg-slate-800 px-3 py-2 rounded hover:bg-slate-700 transition text-sm"
+                          >
+
+                            {p.title}
+
+                            <span
+                              className={`ml-2 text-xs ${
+                                p.difficulty === "Easy"
+                                  ? "text-green-400"
+                                  : p.difficulty === "Medium"
+                                  ? "text-yellow-400"
+                                  : "text-red-400"
+                              }`}
+                            >
+                              {p.difficulty}
+                            </span>
+
+                          </a>
+
+                        ))}
+
+                      </div>
+
+                    </div>
+
+                  )}
+
                 </div>
 
               ))}
@@ -211,13 +293,14 @@ const viewRoadmaps = async () => {
 
           </div>
 
-))}
+        ))}
 
       </div>
 
     </div>
 
   );
+
 }
 
 export default Roadmap;
