@@ -22,7 +22,7 @@ function Chatbot() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Load chat history
+  // Fetch chat history
   useEffect(() => {
 
     const fetchChats = async () => {
@@ -50,7 +50,7 @@ function Chatbot() {
 
   }, []);
 
-  // Load selected chat
+  // Load previous chat
   const loadChat = (chat) => {
 
     const formatted = chat.messages.map(msg => ({
@@ -60,6 +60,15 @@ function Chatbot() {
 
     setMessages(formatted);
     setChatId(chat._id);
+
+  };
+
+  // Start new chat
+  const newChat = () => {
+
+    setMessages([]);
+    setChatId(null);
+    setError("");
 
   };
 
@@ -83,7 +92,7 @@ function Chatbot() {
       const res = await axios.post(
         "http://localhost:5000/api/ai/chat",
         {
-          message: input,
+          message: userMessage.text,
           chatId
         },
         {
@@ -100,25 +109,37 @@ function Chatbot() {
 
       setMessages(prev => [...prev, aiMessage]);
 
+      // if first message create new chat
       if (!chatId) {
+
         setChatId(res.data.chatId);
+
+        const history = await axios.get(
+          "http://localhost:5000/api/ai/history",
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+
+        setChats(history.data);
+
       }
 
-    }catch (err) {
+    } catch (err) {
 
-  console.log(err);
+      console.log(err);
 
-  if (err.response?.status === 429) {
+      if (err.response?.status === 429) {
 
-    setError("AI limit reached. Please wait a minute before asking again.");
+        setError("AI request limit reached. Please wait a minute.");
 
-  } else {
+      } else {
 
-    setError("AI service unavailable. Please try again later.");
+        setError("AI service unavailable. Please try again.");
 
-  }
+      }
 
-}
+    }
 
     setLoading(false);
 
@@ -134,40 +155,48 @@ function Chatbot() {
 
         {/* Sidebar */}
 
-        <div className="md:w-64 w-full md:block bg-slate-900 border-r border-slate-800 p-4 overflow-y-auto">
+        <div className="md:w-64 w-full bg-slate-900 border-r border-slate-800 p-4 overflow-y-auto">
 
-            <h2 className="text-lg font-semibold mb-4">
-                Chat History
-            </h2>
+          <button
+            onClick={newChat}
+            className="w-full bg-blue-500 hover:bg-blue-600 transition px-4 py-2 rounded-lg mb-4"
+          >
+            + New Chat
+          </button>
 
-            {chats.length === 0 && (
-                <p className="text-gray-400 text-sm">
-                No chats yet
-                </p>
-            )}
+          <h2 className="text-lg font-semibold mb-4">
+            Chat History
+          </h2>
 
-            {chats.map(chat => (
+          {chats.length === 0 && (
+            <p className="text-gray-400 text-sm">
+              No chats yet
+            </p>
+          )}
 
-                <div
-                key={chat._id}
-                onClick={() => loadChat(chat)}
-                className="p-3 mb-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700"
-                >
+          {chats.map(chat => (
 
-                <p className="text-sm">
-                    {new Date(chat.createdAt).toLocaleDateString()}
-                </p>
+            <div
+              key={chat._id}
+              onClick={() => loadChat(chat)}
+              className="p-3 mb-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700"
+            >
 
-                <p className="text-xs text-gray-400">
-                    {new Date(chat.createdAt).toLocaleTimeString()}
-                </p>
+              <p className="text-sm">
+                {new Date(chat.createdAt).toLocaleDateString()}
+              </p>
 
-                </div>
-
-            ))}
+              <p className="text-xs text-gray-400">
+                {new Date(chat.createdAt).toLocaleTimeString()}
+              </p>
 
             </div>
-        {/* Chat Window */}
+
+          ))}
+
+        </div>
+
+        {/* Chat Area */}
 
         <div className="flex-1 flex flex-col">
 
@@ -210,8 +239,6 @@ function Chatbot() {
 
             ))}
 
-            {/* Loading */}
-
             {loading && (
               <div className="text-gray-400 animate-pulse">
                 AI is thinking...
@@ -222,11 +249,11 @@ function Chatbot() {
 
           </div>
 
-          {/* Error */}
+          {/* Error Box */}
 
           {error && (
 
-            <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-2 mx-6 mb-3 rounded-lg">
+            <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-2 mx-4 sm:mx-6 mb-3 rounded-lg">
               {error}
             </div>
 
@@ -248,10 +275,10 @@ function Chatbot() {
             />
 
             <button
-            onClick={sendMessage}
-            className="bg-blue-500 px-6 py-2 rounded-lg hover:bg-blue-600 transition w-full sm:w-auto"
+              onClick={sendMessage}
+              className="bg-blue-500 px-6 py-2 rounded-lg hover:bg-blue-600 transition w-full sm:w-auto"
             >
-            Send
+              Send
             </button>
 
           </div>
